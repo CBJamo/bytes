@@ -4,7 +4,6 @@
     attr(deny(warnings, rust_2018_idioms), allow(dead_code, unused_variables))
 ))]
 #![no_std]
-#![cfg_attr(bytes_unstable, feature(cfg_target_has_atomic))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
 //! Provides abstractions for working with bytes.
 //!
@@ -84,23 +83,24 @@ extern crate std;
 pub mod buf;
 pub use crate::buf::{Buf, BufMut};
 
-#[cfg_attr(bytes_unstable, cfg(target_has_atomic = "ptr"))]
+#[cfg(not(bytes_no_atomic_cas))]
 mod bytes;
-#[cfg_attr(bytes_unstable, cfg(target_has_atomic = "ptr"))]
+#[cfg(not(bytes_no_atomic_cas))]
 mod bytes_mut;
-#[cfg_attr(bytes_unstable, cfg(target_has_atomic = "ptr"))]
+#[cfg(not(bytes_no_atomic_cas))]
 mod fmt;
 mod loom;
-#[cfg_attr(bytes_unstable, cfg(target_has_atomic = "ptr"))]
+#[cfg(not(bytes_no_atomic_cas))]
 pub use crate::bytes::Bytes;
-#[cfg_attr(bytes_unstable, cfg(target_has_atomic = "ptr"))]
+#[cfg(not(bytes_no_atomic_cas))]
 pub use crate::bytes_mut::BytesMut;
 
 // Optional Serde support
+#[cfg(not(bytes_no_atomic_cas))]
 #[cfg(feature = "serde")]
 mod serde;
 
-#[cfg_attr(bytes_unstable, cfg(target_has_atomic = "ptr"))]
+#[cfg(not(bytes_no_atomic_cas))]
 #[inline(never)]
 #[cold]
 fn abort() -> ! {
