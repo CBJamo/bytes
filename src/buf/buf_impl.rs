@@ -1120,7 +1120,6 @@ pub trait Buf {
     /// let bytes = (&b"hello world"[..]).copy_to_bytes(5);
     /// assert_eq!(&bytes[..], &b"hello"[..]);
     /// ```
-    #[cfg(not(bytes_no_atomic_cas))]
     fn copy_to_bytes(&mut self, len: usize) -> crate::Bytes {
         use super::BufMut;
 
@@ -1380,7 +1379,6 @@ macro_rules! deref_forward_buf {
         }
 
         #[inline]
-        #[cfg(not(bytes_no_atomic_cas))]
         fn copy_to_bytes(&mut self, len: usize) -> crate::Bytes {
             (**self).copy_to_bytes(len)
         }
